@@ -894,6 +894,8 @@
 
 <div class="chat-input-bar" id="chatInputBar" style="display:none;">
   <div class="chat-input-inner">
+    <button class="attach-btn" onclick="UI.pickAttachment()" title="Adjuntar foto">📎</button>
+    <input type="file" id="chatFileInput" accept="image/jpeg,image/png,image/webp" style="display:none;" onchange="UI.onAttachmentSelected(this)">
     <textarea id="chatInput" placeholder="Escribí un mensaje..." rows="1" onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); UI.sendChat();}"></textarea>
     <button class="send-btn" onclick="UI.sendChat()">➔</button>
   </div>
