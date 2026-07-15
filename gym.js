@@ -382,6 +382,19 @@ const GYM_EXERCISES = {
   ]
 };
 
+// ---- Qué tipo de movimiento animado le corresponde a cada ejercicio ----
+// (un solo muñequito SVG reutilizado, con ~11 animaciones genéricas en vez
+// de una animación única por cada uno de los 30+ ejercicios)
+const EXERCISE_ANIM = {
+  pushup: 'push', pushup_wide: 'push', diamond_pushup: 'push', decline_pushup: 'push', pike_pushup: 'push',
+  pullup: 'pull', chinup: 'pull', australian_pullup: 'pull', inverted_row_high: 'pull', superman_hold: 'hold',
+  pike_pushup_sh: 'push', handstand_hold: 'hold', lateral_raise_body: 'raise', front_raise_body: 'raise', shrug_body: 'raise',
+  tricep_dip: 'push', tricep_pushup: 'push', bicep_curl_body: 'curl', hammer_curl_body: 'curl', diamond_pushup_bi: 'push',
+  squat: 'squat', jump_squat: 'squat', lunges: 'lunge', reverse_lunges: 'lunge', calf_raise: 'calf', glute_bridge: 'bridge', wall_sit: 'hold',
+  plank: 'hold', crunch: 'crunch', leg_raise: 'crunch', russian_twist: 'crunch', mountain_climb: 'jump', dead_bug: 'crunch', bicycle_crunch: 'crunch',
+  burpees: 'jump', jumping_jack: 'jump', high_knees: 'jump', jump_rope: 'jump', squat_jack: 'jump', plank_jack: 'jump'
+};
+
 // ---- Etiquetas amigables para cada grupo ----
 const MUSCLE_LABELS = {
   pecho:   'Pecho',
@@ -534,6 +547,31 @@ window.GymUI = {
   _activeSession: null,
   _sessionExercises: [],
   _expandedInstructions: {}, // Track which exercise instructions are shown
+
+  // Arma el SVG del muñequito animado según el tipo de movimiento del
+  // ejercicio (ver EXERCISE_ANIM). Un solo dibujo, distintas animaciones
+  // CSS por clase (ver <style> de index.html: .anim-push, .anim-squat, etc.).
+  _stickmanHTML(exId) {
+    const anim = EXERCISE_ANIM[exId] || 'hold';
+    return `
+      <div class="gym-stickman-wrap">
+        <svg class="stickman-svg anim-${anim}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <g class="stick-outer">
+            <g class="stick-upper">
+              <circle class="stick-head" cx="50" cy="20" r="8"/>
+              <line class="stick-torso" x1="50" y1="28" x2="50" y2="58"/>
+              <line class="stick-arm-l" x1="50" y1="34" x2="32" y2="50"/>
+              <line class="stick-arm-r" x1="50" y1="34" x2="68" y2="50"/>
+            </g>
+            <g class="stick-lower">
+              <line class="stick-leg-l" x1="50" y1="58" x2="38" y2="85"/>
+              <line class="stick-leg-r" x1="50" y1="58" x2="62" y2="85"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+    `;
+  },
 
   // ---- Init ----
   init() {
@@ -758,6 +796,7 @@ window.GymUI = {
             </div>
 
             ${isExpanded ? `
+              ${this._stickmanHTML(ex.id)}
               <div class="gym-instructions-box">
                 ${ex.instructions.map((step, i) => `<div style="margin-bottom: ${i < ex.instructions.length - 1 ? '8px' : '0'}">${step}</div>`).join('')}
               </div>
