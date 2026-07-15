@@ -382,17 +382,29 @@ const GYM_EXERCISES = {
   ]
 };
 
-// ---- Qué tipo de movimiento animado le corresponde a cada ejercicio ----
-// (un solo muñequito SVG reutilizado, con ~11 animaciones genéricas en vez
-// de una animación única por cada uno de los 30+ ejercicios)
-const EXERCISE_ANIM = {
-  pushup: 'push', pushup_wide: 'push', diamond_pushup: 'push', decline_pushup: 'push', pike_pushup: 'push',
-  pullup: 'pull', chinup: 'pull', australian_pullup: 'pull', inverted_row_high: 'pull', superman_hold: 'hold',
-  pike_pushup_sh: 'push', handstand_hold: 'hold', lateral_raise_body: 'raise', front_raise_body: 'raise', shrug_body: 'raise',
-  tricep_dip: 'push', tricep_pushup: 'push', bicep_curl_body: 'curl', hammer_curl_body: 'curl', diamond_pushup_bi: 'push',
-  squat: 'squat', jump_squat: 'squat', lunges: 'lunge', reverse_lunges: 'lunge', calf_raise: 'calf', glute_bridge: 'bridge', wall_sit: 'hold',
-  plank: 'hold', crunch: 'crunch', leg_raise: 'crunch', russian_twist: 'crunch', mountain_climb: 'jump', dead_bug: 'crunch', bicycle_crunch: 'crunch',
-  burpees: 'jump', jumping_jack: 'jump', high_knees: 'jump', jump_rope: 'jump', squat_jack: 'jump', plank_jack: 'jump'
+// ---- Fotos reales para el "cómo hacerlo" (reemplaza al muñequito) ----
+// Cada ejercicio puede tener 2 fotos (posición inicial / posición final)
+// que se muestran en loop (ver _photoLoopHTML). Las fotos vienen de
+// free-exercise-db (github.com/yuhonas/free-exercise-db), una base de
+// datos de dominio público (Unlicense), alojada gratis en GitHub:
+//   https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/<ID>/0.jpg
+//
+// Ya cargué las que pude confirmar 1 a 1 contra esa base. Para el resto,
+// dejé el ícono grande como respaldo (no inventé links para no arriesgar
+// fotos rotas o que no correspondan al ejercicio).
+//
+// Para agregar más: buscá el ejercicio en https://yuhonas.github.io/free-exercise-db/,
+// copiá las URLs de sus 2 fotos y agregá una línea acá, ej:
+//   pushup: [FED_BASE + 'Pushups/0.jpg', FED_BASE + 'Pushups/1.jpg'],
+// Si una URL no carga, el <img> se oculta solo y queda el ícono de fondo.
+const FED_BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
+const EXERCISE_PHOTOS = {
+  squat:          [FED_BASE + 'Bodyweight_Squat/0.jpg', FED_BASE + 'Bodyweight_Squat/1.jpg'],
+  lunges:         [FED_BASE + 'Bodyweight_Walking_Lunge/0.jpg', FED_BASE + 'Bodyweight_Walking_Lunge/1.jpg'],
+  reverse_lunges: [FED_BASE + 'Bodyweight_Walking_Lunge/0.jpg', FED_BASE + 'Bodyweight_Walking_Lunge/1.jpg'],
+  tricep_dip:     [FED_BASE + 'Bench_Dips/0.jpg', FED_BASE + 'Bench_Dips/1.jpg'],
+  bicycle_crunch: [FED_BASE + 'Air_Bike/0.jpg', FED_BASE + 'Air_Bike/1.jpg'],
+  leg_raise:      [FED_BASE + 'Bent-Knee_Hip_Raise/0.jpg', FED_BASE + 'Bent-Knee_Hip_Raise/1.jpg']
 };
 
 // ---- Etiquetas amigables para cada grupo ----
@@ -548,25 +560,19 @@ window.GymUI = {
   _sessionExercises: [],
   _expandedInstructions: {}, // Track which exercise instructions are shown
 
-  // Arma el SVG del muñequito animado según el tipo de movimiento del
-  // ejercicio (ver EXERCISE_ANIM). Un solo dibujo, distintas animaciones
-  // CSS por clase (ver <style> de index.html: .anim-push, .anim-squat, etc.).
-  _stickmanHTML(exId) {
-    const anim = EXERCISE_ANIM[exId] || 'hold';
+  // Arma el loop de fotos del ejercicio (ver EXERCISE_PHOTOS). Si no hay
+  // fotos cargadas para este ejercicio, muestra el ícono grande como
+  // respaldo en vez de una foto rota.
+  _photoLoopHTML(ex) {
+    const photos = EXERCISE_PHOTOS[ex.id];
+    if (!photos) {
+      return `<div class="gym-photo-loop gym-photo-fallback"><span class="gym-photo-fallback-icon" style="position:static; font-size:44px;">${ex.icon}</span></div>`;
+    }
     return `
-      <div class="gym-stickman-wrap">
-        <div class="stickman anim-${anim}">
-          <div class="stick-upper">
-            <div class="stick-head"></div>
-            <div class="stick-torso"></div>
-            <div class="stick-arm-l"></div>
-            <div class="stick-arm-r"></div>
-          </div>
-          <div class="stick-lower">
-            <div class="stick-leg-l"></div>
-            <div class="stick-leg-r"></div>
-          </div>
-        </div>
+      <div class="gym-photo-loop">
+        <span class="gym-photo-fallback-icon">${ex.icon}</span>
+        <img src="${photos[0]}" alt="${ex.name} - paso 1" loading="lazy" onerror="this.style.display='none'">
+        <img src="${photos[1]}" alt="${ex.name} - paso 2" loading="lazy" onerror="this.style.display='none'">
       </div>
     `;
   },
@@ -794,7 +800,7 @@ window.GymUI = {
             </div>
 
             ${isExpanded ? `
-              ${this._stickmanHTML(ex.id)}
+              ${this._photoLoopHTML(ex)}
               <div class="gym-instructions-box">
                 ${ex.instructions.map((step, i) => `<div style="margin-bottom: ${i < ex.instructions.length - 1 ? '8px' : '0'}">${step}</div>`).join('')}
               </div>
