@@ -1106,104 +1106,75 @@ const VoiceInput = {
 const NutrioAvatar = {
   _state: 'dormido',
   _idleTimer: null,
-  _IDLE_MS: 18000, // 18s sin actividad en el chat y se vuelve a dormir
+  _IDLE_MS: 18000,
   _el: null,
-  _SIZE: 52, // burbuja de vidrio: un pelín más grande para que el blur respire
+  _SIZE: 48,
 
   _FACES: {
     dormido: `
       <g class="nutrio-face nutrio-face-dormido">
-        <path d="M12 18 q3 -3 6 0" class="nutrio-eye-closed" />
-        <path d="M26 18 q3 -3 6 0" class="nutrio-eye-closed" />
-        <ellipse cx="15" cy="23.5" rx="2.2" ry="1.3" class="nutrio-cheek" />
-        <ellipse cx="29" cy="23.5" rx="2.2" ry="1.3" class="nutrio-cheek" />
-        <path d="M16 27 q6 2.5 12 0" class="nutrio-mouth" />
-        <text x="32" y="10" class="nutrio-zzz nutrio-zzz1">z</text>
-        <text x="36" y="6" class="nutrio-zzz nutrio-zzz2">z</text>
+        <line x1="15" y1="20" x2="19" y2="20" class="nutrio-eye-closed" />
+        <line x1="25" y1="20" x2="29" y2="20" class="nutrio-eye-closed" />
+        <path d="M18 27 q4 1.5 8 0" class="nutrio-mouth" />
+        <text x="31" y="12" class="nutrio-zzz nutrio-zzz1">z</text>
+        <text x="34" y="8" class="nutrio-zzz nutrio-zzz2">z</text>
       </g>`,
     despierto: `
       <g class="nutrio-face nutrio-face-despierto">
-        <g class="nutrio-eye-group nutrio-eye-group-l">
-          <circle cx="15" cy="18" r="2.7" class="nutrio-eye" />
-          <circle cx="16.1" cy="16.9" r="0.85" class="nutrio-eye-shine" />
-        </g>
-        <g class="nutrio-eye-group nutrio-eye-group-r">
-          <circle cx="29" cy="18" r="2.7" class="nutrio-eye" />
-          <circle cx="30.1" cy="16.9" r="0.85" class="nutrio-eye-shine" />
-        </g>
-        <ellipse cx="15" cy="24.5" rx="2.2" ry="1.3" class="nutrio-cheek" />
-        <ellipse cx="29" cy="24.5" rx="2.2" ry="1.3" class="nutrio-cheek" />
-        <path d="M16 27 q6 4 12 0" class="nutrio-mouth" />
+        <circle cx="17" cy="20" r="1.8" class="nutrio-eye" />
+        <circle cx="27" cy="20" r="1.8" class="nutrio-eye" />
+        <path d="M18 27 q4 2.5 8 0" class="nutrio-mouth" />
       </g>`,
     pensando: `
       <g class="nutrio-face nutrio-face-pensando">
-        <path d="M10.5 14 q3 -1.8 6 0" class="nutrio-eyebrow" />
-        <circle cx="14" cy="17.5" r="2.3" class="nutrio-eye" />
-        <circle cx="29" cy="16.5" r="2.3" class="nutrio-eye" />
+        <circle cx="16" cy="19" r="1.8" class="nutrio-eye" />
+        <circle cx="27" cy="18" r="1.8" class="nutrio-eye" />
         <g class="nutrio-thinking-dots">
-          <circle cx="17" cy="28" r="1.15" class="nutrio-dot nutrio-dot1" />
-          <circle cx="21.5" cy="28" r="1.15" class="nutrio-dot nutrio-dot2" />
-          <circle cx="26" cy="28" r="1.15" class="nutrio-dot nutrio-dot3" />
+          <circle cx="19" cy="28" r="1" class="nutrio-dot nutrio-dot1" />
+          <circle cx="22" cy="28" r="1" class="nutrio-dot nutrio-dot2" />
+          <circle cx="25" cy="28" r="1" class="nutrio-dot nutrio-dot3" />
         </g>
       </g>`,
     feliz: `
       <g class="nutrio-face nutrio-face-feliz">
-        <path d="M10.5 18 q3.5 -4.8 7 0" class="nutrio-eye-happy" />
-        <path d="M25.5 18 q3.5 -4.8 7 0" class="nutrio-eye-happy" />
-        <ellipse cx="14" cy="24.5" rx="2.7" ry="1.7" class="nutrio-cheek nutrio-cheek-bright" />
-        <ellipse cx="30" cy="24.5" rx="2.7" ry="1.7" class="nutrio-cheek nutrio-cheek-bright" />
-        <path d="M13.5 25 q8 8.5 16 0" class="nutrio-mouth-big" />
+        <path d="M13 20 q4 -3.5 8 0" class="nutrio-eye-happy" />
+        <path d="M23 20 q4 -3.5 8 0" class="nutrio-eye-happy" />
+        <path d="M16 26 q5 5 12 0" class="nutrio-mouth-big" />
       </g>`,
     sorprendido: `
       <g class="nutrio-face nutrio-face-sorprendido">
-        <path d="M10 12.5 q3.5 -2.4 7 0" class="nutrio-eyebrow nutrio-eyebrow-up" />
-        <path d="M26 12.5 q3.5 -2.4 7 0" class="nutrio-eyebrow nutrio-eyebrow-up" />
-        <circle cx="14" cy="18" r="3.2" class="nutrio-eye" />
-        <circle cx="30" cy="18" r="3.2" class="nutrio-eye" />
-        <ellipse cx="22" cy="28.5" rx="3.2" ry="3.4" class="nutrio-mouth-o" />
-        <path d="M4 9 l2 2 M40 9 l-2 2 M3 26 l2 -1.5 M41 26 l-2 -1.5" class="nutrio-sparkle" />
+        <circle cx="17" cy="19" r="2.4" class="nutrio-eye" />
+        <circle cx="27" cy="19" r="2.4" class="nutrio-eye" />
+        <circle cx="22" cy="28" r="2.6" class="nutrio-mouth-o" />
       </g>`,
     guino: `
       <g class="nutrio-face nutrio-face-guino">
-        <path d="M10.5 18 q3.5 -3 7 0" class="nutrio-eye-closed" />
-        <circle cx="29" cy="18" r="2.6" class="nutrio-eye" />
-        <circle cx="30.1" cy="16.9" r="0.85" class="nutrio-eye-shine" />
-        <ellipse cx="15" cy="24.5" rx="2.2" ry="1.3" class="nutrio-cheek" />
-        <path d="M16 26.5 q6 3 11 0" class="nutrio-mouth-smirk" />
+        <line x1="15" y1="20" x2="19" y2="20" class="nutrio-eye-closed" />
+        <circle cx="27" cy="20" r="1.8" class="nutrio-eye" />
+        <path d="M18 26.5 q5 2 9 0" class="nutrio-mouth" />
       </g>`,
     riendo: `
       <g class="nutrio-face nutrio-face-riendo">
-        <path d="M8.5 17 q4.5 -7 9 0" class="nutrio-eye-happy" />
-        <path d="M24.5 17 q4.5 -7 9 0" class="nutrio-eye-happy" />
-        <ellipse cx="13.5" cy="25.5" rx="3" ry="1.9" class="nutrio-cheek nutrio-cheek-bright" />
-        <ellipse cx="30.5" cy="25.5" rx="3" ry="1.9" class="nutrio-cheek nutrio-cheek-bright" />
-        <path d="M10.5 23.5 q11 13 21 0" class="nutrio-mouth-big" />
-        <text x="2" y="8" class="nutrio-haha nutrio-haha1">ja</text>
-        <text x="34" y="6" class="nutrio-haha nutrio-haha2">ja</text>
+        <path d="M12 20 q5 -4.5 10 0" class="nutrio-eye-happy" />
+        <path d="M22 20 q5 -4.5 10 0" class="nutrio-eye-happy" />
+        <path d="M14 25 q8 10 16 0" class="nutrio-mouth-big" />
+        <text x="3" y="9" class="nutrio-haha nutrio-haha1">ja</text>
+        <text x="33" y="7" class="nutrio-haha nutrio-haha2">ja</text>
       </g>`,
     llorando: `
       <g class="nutrio-face nutrio-face-llorando">
-        <path d="M10.5 14.5 q3.5 3 7 0" class="nutrio-eyebrow" />
-        <path d="M26.5 14.5 q3.5 3 7 0" class="nutrio-eyebrow" />
-        <circle cx="14" cy="19.5" r="2.3" class="nutrio-eye" />
-        <circle cx="30" cy="19.5" r="2.3" class="nutrio-eye" />
-        <path d="M13 31 q9 -6.5 18 0" class="nutrio-mouth-sad" />
-        <path d="M13.3 22.5 q-1 3 -0.6 6" class="nutrio-tear nutrio-tear-l" />
-        <path d="M30.7 22.5 q1 3 0.6 6" class="nutrio-tear nutrio-tear-r" />
+        <circle cx="17" cy="20" r="1.8" class="nutrio-eye" />
+        <circle cx="27" cy="20" r="1.8" class="nutrio-eye" />
+        <path d="M17 29 q5 -4 10 0" class="nutrio-mouth-sad" />
+        <path d="M15.5 23 q-0.5 3 -0.3 5.5" class="nutrio-tear nutrio-tear-l" />
+        <path d="M28.5 23 q0.5 3 0.3 5.5" class="nutrio-tear nutrio-tear-r" />
       </g>`
   },
 
-  // Crea el avatar (una sola vez) como primer hijo del header del chat, así
-  // queda a la izquierda del nombre "Nutrio" sin tener que tocar index.html.
-  // Estructura: .nutrio-avatar-glass (burbuja + borde iridiscente animado
-  // vía ::before, blur real por backdrop-filter) > svg (cuerpo + cara).
   _ensureEl() {
     if (this._el) return this._el;
     const header = document.querySelector('.chat-header');
     if (!header) return null;
-
-    const profile = (typeof StorageApp !== 'undefined') ? StorageApp.getProfile() : null;
-    const isMale = profile && profile.sex === 'masculino';
 
     const size = this._SIZE;
     const wrap = document.createElement('div');
@@ -1214,40 +1185,19 @@ const NutrioAvatar = {
     wrap.innerHTML = `
       <svg viewBox="0 0 44 44" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <radialGradient id="nutrioBodyGradient" cx="40%" cy="35%" r="70%">
-            <stop offset="0%" stop-color="#fcd5b0" stop-opacity="0.95" />
-            <stop offset="60%" stop-color="#e8a87c" stop-opacity="0.80" />
-            <stop offset="100%" stop-color="#c4845c" stop-opacity="0.45" />
+          <radialGradient id="nutrioBodyGradient" cx="40%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#e8f5e9" stop-opacity="1" />
+            <stop offset="100%" stop-color="#c8e6c9" stop-opacity="0.7" />
           </radialGradient>
           <linearGradient id="nutrioRimGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="rgba(255,255,255,0.90)" />
-            <stop offset="45%" stop-color="#d4a574" stop-opacity="0.60" />
-            <stop offset="100%" stop-color="rgba(255,255,255,0.15)" />
+            <stop offset="0%" stop-color="rgba(255,255,255,0.95)" />
+            <stop offset="100%" stop-color="rgba(200,230,201,0.40)" />
           </linearGradient>
         </defs>
-        <!-- Cuerpo (cara) -->
         <circle cx="22" cy="22" r="19.2" class="nutrio-avatar-body" />
         <circle cx="22" cy="22" r="19.2" class="nutrio-avatar-rim" />
-        <!-- Pelo: hombre = corto, mujer = cola -->
-        ${isMale ? `
-          <path d="M6 18 Q6 4 22 3 Q38 4 38 18" fill="#3e2723" opacity="0.85"/>
-          <path d="M8 16 Q8 6 22 5 Q36 6 36 16" fill="#4e342e" opacity="0.7"/>
-        ` : `
-          <path d="M5 20 Q4 3 22 2.5 Q40 3 39 20" fill="#3e2723" opacity="0.85"/>
-          <path d="M7 18 Q6 5 22 4.5 Q38 5 37 18" fill="#4e342e" opacity="0.7"/>
-          <!-- Cola de caballo -->
-          <ellipse cx="36" cy="10" rx="4" ry="7" fill="#3e2723" opacity="0.8" transform="rotate(15 36 10)"/>
-          <ellipse cx="36" cy="10" rx="3" ry="5.5" fill="#4e342e" opacity="0.65" transform="rotate(15 36 10)"/>
-          <!-- Liga de la cola -->
-          <circle cx="33" cy="13" r="1.5" fill="var(--primary, #4caf50)" opacity="0.9"/>
-        `}
-        <!-- Vincha deportiva -->
-        <path d="M7 14 Q22 8 37 14" fill="none" stroke="var(--primary, #4caf50)" stroke-width="2.8" stroke-linecap="round" opacity="0.9"/>
-        <path d="M7 14 Q22 10 37 14" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-linecap="round"/>
-        <!-- Brillo de vidrio -->
-        <ellipse cx="14.5" cy="11.5" rx="6.5" ry="4.2" class="nutrio-avatar-shine-big" />
-        <circle cx="16" cy="12.5" r="2.6" class="nutrio-avatar-shine" />
-        <ellipse cx="30" cy="32" rx="4.5" ry="2.4" class="nutrio-avatar-shine-low" />
+        <ellipse cx="14" cy="11" rx="5.5" ry="3.5" class="nutrio-avatar-shine-big" />
+        <circle cx="15" cy="12" r="2" class="nutrio-avatar-shine" />
         <g id="nutrioAvatarFace"></g>
       </svg>`;
 
@@ -1262,59 +1212,57 @@ const NutrioAvatar = {
     const style = document.createElement('style');
     style.id = 'nutrioAvatarStyles';
     style.textContent = `
-      /* --- Burbuja de vidrio (liquid glass) --- */
+      /* --- Minimalist glass bubble --- */
       .nutrio-avatar-glass {
         position: relative;
         border-radius: 50%;
         cursor: pointer;
-        background: linear-gradient(150deg, rgba(255,255,255,0.55), rgba(255,255,255,0.12));
-        -webkit-backdrop-filter: blur(14px) saturate(160%);
-        backdrop-filter: blur(14px) saturate(160%);
+        background: linear-gradient(150deg, rgba(255,255,255,0.60), rgba(255,255,255,0.15));
+        -webkit-backdrop-filter: blur(12px) saturate(140%);
+        backdrop-filter: blur(12px) saturate(140%);
         box-shadow:
           0 1px 1px rgba(255,255,255,0.85) inset,
-          0 -6px 10px rgba(76,175,80,0.10) inset,
-          0 10px 22px -8px rgba(20,83,45,0.28),
-          0 2px 6px rgba(20,83,45,0.12);
+          0 -4px 8px rgba(76,175,80,0.08) inset,
+          0 6px 18px -6px rgba(20,83,45,0.22),
+          0 2px 4px rgba(20,83,45,0.08);
         transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s ease;
         will-change: transform;
         animation: nutrioFloatIdle 4.6s ease-in-out infinite;
       }
-      /* Borde iridiscente que gira despacio, sutil, típico "liquid glass" */
       .nutrio-avatar-glass::before {
         content: '';
         position: absolute;
-        inset: -2px;
+        inset: -1.5px;
         border-radius: 50%;
         background: conic-gradient(from 0deg,
           rgba(255,255,255,0) 0%,
-          rgba(255,255,255,0.85) 12%,
-          rgba(76,175,80,0.55) 30%,
+          rgba(255,255,255,0.7) 12%,
+          rgba(76,175,80,0.4) 30%,
           rgba(255,255,255,0) 50%,
-          rgba(255,183,77,0.45) 72%,
+          rgba(129,199,132,0.35) 72%,
           rgba(255,255,255,0) 90%,
           rgba(255,255,255,0) 100%);
-        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
-                mask: radial-gradient(farthest-side, transparent calc(100% - 3px), #000 calc(100% - 3px));
-        animation: nutrioRimRotate 7s linear infinite;
-        opacity: 0.9;
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+                mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px), #000 calc(100% - 2.5px));
+        animation: nutrioRimRotate 8s linear infinite;
+        opacity: 0.8;
         pointer-events: none;
       }
-      /* Puntito de luz ambiental que se pasea despacio por el vidrio */
       .nutrio-avatar-glass::after {
         content: '';
         position: absolute;
         inset: 0;
         border-radius: 50%;
-        background: radial-gradient(circle 8px at 30% 25%, rgba(255,255,255,0.5), transparent 70%);
+        background: radial-gradient(circle 6px at 32% 28%, rgba(255,255,255,0.45), transparent 70%);
         animation: nutrioAmbientDrift 5.5s ease-in-out infinite;
         pointer-events: none;
         mix-blend-mode: screen;
       }
       .nutrio-avatar-glass:hover {
-        transform: translateY(-1px) scale(1.03);
+        transform: translateY(-1px) scale(1.04);
       }
       .nutrio-avatar-glass:active {
-        transform: scale(0.94);
+        transform: scale(0.95);
       }
       .nutrio-avatar-glass svg { display:block; overflow:visible; position: relative; z-index: 1; }
 
@@ -1324,67 +1272,41 @@ const NutrioAvatar = {
       .nutrio-avatar-rim {
         fill: none;
         stroke: url(#nutrioRimGradient);
-        stroke-width: 1.4;
-        opacity: 0.9;
+        stroke-width: 1.2;
+        opacity: 0.85;
       }
       .nutrio-avatar-shine-big {
-        fill: rgba(255,255,255,0.55);
-        filter: blur(1.5px);
+        fill: rgba(255,255,255,0.50);
+        filter: blur(1.2px);
         pointer-events: none;
       }
       .nutrio-avatar-shine {
-        fill: rgba(255,255,255,0.85);
+        fill: rgba(255,255,255,0.80);
         pointer-events: none;
-      }
-      .nutrio-avatar-shine-low {
-        fill: rgba(255,255,255,0.18);
-        filter: blur(2px);
-        pointer-events: none;
-      }
-      .nutrio-avatar-antenna-stem {
-        stroke: #9aa3ad;
-        stroke-width: 1.6;
-        stroke-linecap: round;
-      }
-      .nutrio-avatar-antenna-tip {
-        fill: var(--primary, #4caf50);
-        stroke: #9aa3ad;
-        stroke-width: 1;
-        animation: nutrioTwinkle 2.4s ease-in-out infinite;
-      }
-      .nutrio-avatar-earpiece {
-        fill: #c7ccd1;
-        stroke: #9aa3ad;
-        stroke-width: 1;
       }
 
-      /* --- Cara --- */
-      .nutrio-face path, .nutrio-face circle, .nutrio-face ellipse {
-        stroke: #5b636d;
-        stroke-width: 1.9;
+      /* --- Minimalist face --- */
+      .nutrio-face path, .nutrio-face circle, .nutrio-face ellipse, .nutrio-face line {
+        stroke: #4a7c59;
+        stroke-width: 1.6;
         fill: none;
         stroke-linecap: round;
+        stroke-linejoin: round;
       }
-      .nutrio-face .nutrio-eye, .nutrio-face .nutrio-mouth-o { fill: #5b636d; }
-      .nutrio-face .nutrio-eye-shine {
-        fill: rgba(255,255,255,0.95);
-        stroke: none;
-      }
-      .nutrio-eye-group { transform-box: fill-box; transform-origin: center; }
+      .nutrio-face .nutrio-eye, .nutrio-face .nutrio-mouth-o { fill: #4a7c59; }
+      .nutrio-face .nutrio-eye-closed { stroke-width: 1.8; }
       .nutrio-face .nutrio-cheek {
         fill: none;
         stroke: none;
         opacity: 0;
       }
       .nutrio-face .nutrio-cheek-bright { opacity: 0; }
-      .nutrio-face .nutrio-eyebrow { stroke-width: 2; }
-      .nutrio-face .nutrio-mouth-smirk { stroke-width: 2; }
       .nutrio-face .nutrio-sparkle {
-        stroke: var(--accent-desayuno, #ffb74d);
-        stroke-width: 1.6;
+        stroke: #66bb6a;
+        stroke-width: 1.4;
       }
       .nutrio-face .nutrio-dot {
-        fill: #5b636d;
+        fill: #4a7c59;
         stroke: none;
         transform-box: fill-box;
         transform-origin: center;
@@ -1394,27 +1316,25 @@ const NutrioAvatar = {
       .nutrio-face .nutrio-dot2 { animation-delay: 0.15s; }
       .nutrio-face .nutrio-dot3 { animation-delay: 0.3s; }
       .nutrio-zzz {
-        font-size: 6px;
+        font-size: 5.5px;
         font-weight: 700;
-        fill: #5b636d;
+        fill: #4a7c59;
         opacity: 0;
       }
       .nutrio-zzz1 { animation: nutrioZzzFloat 2.4s ease-in-out infinite; }
       .nutrio-zzz2 { animation: nutrioZzzFloat 2.4s ease-in-out infinite 0.7s; }
 
-      /* --- Cara riendo (👍) --- */
       .nutrio-haha {
-        font-size: 6px;
+        font-size: 5.5px;
         font-weight: 700;
-        fill: #ffb74d;
+        fill: #66bb6a;
         opacity: 0;
       }
       .nutrio-haha1 { animation: nutrioHahaFloat 0.9s ease-out infinite; }
       .nutrio-haha2 { animation: nutrioHahaFloat 0.9s ease-out infinite 0.25s; }
 
-      /* --- Cara llorando (👎) --- */
       .nutrio-face .nutrio-mouth-sad {
-        stroke: #5b636d;
+        stroke: #4a7c59;
         fill: none;
       }
       .nutrio-face .nutrio-tear {
@@ -1426,24 +1346,18 @@ const NutrioAvatar = {
       }
       .nutrio-tear-r { animation-delay: 0.35s; }
 
-      /* --- Estados: animación en la burbuja entera, más orgánica que un
-         simple scale plano, para que se sienta "viva" y con peso/gelatina --- */
+      /* --- State animations --- */
       #nutrioAvatar.is-dormido {
         animation: nutrioGlassBreathe 3.2s ease-in-out infinite;
       }
-      #nutrioAvatar.is-dormido::before { animation-play-state: paused; opacity: 0.35; }
-      #nutrioAvatar.is-despierto .nutrio-eye-group-l {
-        animation: nutrioBlink 5.2s ease-in-out infinite;
-      }
-      #nutrioAvatar.is-despierto .nutrio-eye-group-r {
-        animation: nutrioBlink 5.2s ease-in-out infinite 0.18s;
-      }
+      #nutrioAvatar.is-dormido::before { animation-play-state: paused; opacity: 0.3; }
       #nutrioAvatar.is-despierto {
+        animation: nutrioFloatIdle 4.6s ease-in-out infinite;
         box-shadow:
           0 1px 1px rgba(255,255,255,0.85) inset,
-          0 -6px 10px rgba(76,175,80,0.14) inset,
-          0 10px 22px -8px rgba(20,83,45,0.32),
-          0 0 0 3px rgba(76,175,80,0.10);
+          0 -4px 8px rgba(76,175,80,0.12) inset,
+          0 6px 18px -6px rgba(20,83,45,0.26),
+          0 0 0 2px rgba(76,175,80,0.08);
       }
       #nutrioAvatar.is-pensando {
         animation: nutrioGlassTilt 1.6s ease-in-out infinite;
@@ -1455,24 +1369,21 @@ const NutrioAvatar = {
         animation: nutrioGlassPop 0.7s cubic-bezier(.34,1.56,.64,1);
         box-shadow:
           0 1px 1px rgba(255,255,255,0.9) inset,
-          0 -6px 10px rgba(255,183,77,0.22) inset,
-          0 10px 26px -8px rgba(20,83,45,0.32),
-          0 0 0 4px rgba(255,183,77,0.20);
+          0 -4px 8px rgba(129,199,132,0.18) inset,
+          0 8px 22px -6px rgba(20,83,45,0.26),
+          0 0 0 3px rgba(129,199,132,0.15);
       }
-      #nutrioAvatar.is-sorprendido .nutrio-sparkle { animation: nutrioTwinkle 0.7s ease-in-out infinite; transform-origin: center; }
       #nutrioAvatar.is-guino {
         animation: nutrioGlassWink 0.4s ease-out;
       }
-      /* 👍 "me gusta": se agranda un montón y se ríe a las carcajadas */
       #nutrioAvatar.is-riendo {
         animation: nutrioGlassLaugh 1.1s cubic-bezier(.34,1.56,.64,1);
         box-shadow:
           0 1px 1px rgba(255,255,255,0.9) inset,
-          0 -6px 10px rgba(255,183,77,0.22) inset,
-          0 12px 28px -8px rgba(20,83,45,0.34),
-          0 0 0 4px rgba(76,175,80,0.18);
+          0 -4px 8px rgba(129,199,132,0.18) inset,
+          0 10px 24px -6px rgba(20,83,45,0.28),
+          0 0 0 3px rgba(76,175,80,0.12);
       }
-      /* 👎 "no me gusta": se cae de costado y se pone a llorar */
       #nutrioAvatar.is-llorando {
         animation: nutrioGlassFall 1.4s cubic-bezier(.36,.07,.19,.97);
       }
@@ -2099,10 +2010,10 @@ const UI = {
     const targetView = document.getElementById(`view-${viewName}`);
     if (targetView) targetView.classList.add('active');
 
-    const viewsOrder = ['chat', 'inicio', 'semana', 'gym', 'carrito', 'perfil'];
+    const viewsOrder = ['chat', 'inicio', 'gym'];
     const idx = viewsOrder.indexOf(viewName);
-    const buttons = document.querySelectorAll('.dock-item');
-    if (buttons[idx]) buttons[idx].classList.add('active');
+    const dockButtons = document.querySelectorAll('.dock-item');
+    if (dockButtons[idx]) dockButtons[idx].classList.add('active');
 
     const inputBar = document.getElementById('chatInputBar');
     if (inputBar) inputBar.style.display = viewName === 'chat' ? 'block' : 'none';

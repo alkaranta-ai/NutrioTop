@@ -19,9 +19,13 @@ const StorageApp = {
   },
   // Borra por completo la memoria local para reiniciar la aplicación desde cero
   clearAll() {
-    localStorage.removeItem('nutrio_profile');
-    localStorage.removeItem('nutrio_cart');
-    localStorage.removeItem('nutrio_gym_workouts');
-    localStorage.removeItem('nutrio_gym_active');
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('nutrio_')) {
+        keysToRemove.push(key);
+      }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key));
   }
 };

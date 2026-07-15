@@ -667,7 +667,7 @@ window.GymUI = {
         <div style="display:flex; align-items:center; justify-content:space-between;">
           <div>
             <div style="font-weight:700; font-size:15px;">${w.routineName || 'Entrenamiento libre'}</div>
-            <div class="gym-workout-meta">${exCount} ejercicios · ${elapsed} · ${this._formatDate(w.date)}</div>
+            <div class="gym-workout-meta">${exCount} ejercicios · ${elapsed} · ${this._formatTime(w.date)}</div>
           </div>
           <span style="font-size: 18px;">›</span>
         </div>
@@ -675,7 +675,7 @@ window.GymUI = {
     `;
   },
 
-  _formatDate(dateStr) {
+  _formatTime(dateStr) {
     const d = new Date(dateStr);
     return d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
   },
@@ -990,7 +990,7 @@ window.GymUI = {
     content.innerHTML = `
       <div class="modal-sheet-handle"></div>
       <h2 style="margin-bottom: 4px;">${w.routineName || 'Entrenamiento libre'}</h2>
-      <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">${this._formatDate(w.date)} · ${this._formatElapsedStatic(w.startTime, w.endTime || Date.now())}</p>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:16px;">${this._formatTime(w.date)} · ${this._formatElapsedStatic(w.startTime, w.endTime || Date.now())}</p>
 
       ${(w.exercises || []).map(ex => `
         <div class="gym-finish-exercise">
