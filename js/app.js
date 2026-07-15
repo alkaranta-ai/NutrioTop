@@ -1202,6 +1202,9 @@ const NutrioAvatar = {
     const header = document.querySelector('.chat-header');
     if (!header) return null;
 
+    const profile = (typeof StorageApp !== 'undefined') ? StorageApp.getProfile() : null;
+    const isMale = profile && profile.sex === 'masculino';
+
     const size = this._SIZE;
     const wrap = document.createElement('div');
     wrap.id = 'nutrioAvatar';
@@ -1211,25 +1214,37 @@ const NutrioAvatar = {
     wrap.innerHTML = `
       <svg viewBox="0 0 44 44" width="${size}" height="${size}" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <radialGradient id="nutrioBodyGradient" cx="32%" cy="26%" r="80%">
-            <stop offset="0%" stop-color="#f2f4f6" stop-opacity="0.97" />
-            <stop offset="55%" stop-color="#c7ccd1" stop-opacity="0.65" />
-            <stop offset="100%" stop-color="#8a919b" stop-opacity="0.30" />
+          <radialGradient id="nutrioBodyGradient" cx="40%" cy="35%" r="70%">
+            <stop offset="0%" stop-color="#fcd5b0" stop-opacity="0.95" />
+            <stop offset="60%" stop-color="#e8a87c" stop-opacity="0.80" />
+            <stop offset="100%" stop-color="#c4845c" stop-opacity="0.45" />
           </radialGradient>
           <linearGradient id="nutrioRimGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="rgba(255,255,255,0.95)" />
-            <stop offset="45%" stop-color="#9aa3ad" stop-opacity="0.65" />
+            <stop offset="0%" stop-color="rgba(255,255,255,0.90)" />
+            <stop offset="45%" stop-color="#d4a574" stop-opacity="0.60" />
             <stop offset="100%" stop-color="rgba(255,255,255,0.15)" />
           </linearGradient>
         </defs>
-        <!-- Antena de robot -->
-        <line x1="22" y1="3.5" x2="22" y2="-1.5" class="nutrio-avatar-antenna-stem" />
-        <circle cx="22" cy="-2.2" r="1.9" class="nutrio-avatar-antenna-tip" />
+        <!-- Cuerpo (cara) -->
         <circle cx="22" cy="22" r="19.2" class="nutrio-avatar-body" />
         <circle cx="22" cy="22" r="19.2" class="nutrio-avatar-rim" />
-        <!-- Auriculares/laterales de robot -->
-        <rect x="1.2" y="18" width="3" height="8" rx="1.5" class="nutrio-avatar-earpiece" />
-        <rect x="39.8" y="18" width="3" height="8" rx="1.5" class="nutrio-avatar-earpiece" />
+        <!-- Pelo: hombre = corto, mujer = cola -->
+        ${isMale ? `
+          <path d="M6 18 Q6 4 22 3 Q38 4 38 18" fill="#3e2723" opacity="0.85"/>
+          <path d="M8 16 Q8 6 22 5 Q36 6 36 16" fill="#4e342e" opacity="0.7"/>
+        ` : `
+          <path d="M5 20 Q4 3 22 2.5 Q40 3 39 20" fill="#3e2723" opacity="0.85"/>
+          <path d="M7 18 Q6 5 22 4.5 Q38 5 37 18" fill="#4e342e" opacity="0.7"/>
+          <!-- Cola de caballo -->
+          <ellipse cx="36" cy="10" rx="4" ry="7" fill="#3e2723" opacity="0.8" transform="rotate(15 36 10)"/>
+          <ellipse cx="36" cy="10" rx="3" ry="5.5" fill="#4e342e" opacity="0.65" transform="rotate(15 36 10)"/>
+          <!-- Liga de la cola -->
+          <circle cx="33" cy="13" r="1.5" fill="var(--primary, #4caf50)" opacity="0.9"/>
+        `}
+        <!-- Vincha deportiva -->
+        <path d="M7 14 Q22 8 37 14" fill="none" stroke="var(--primary, #4caf50)" stroke-width="2.8" stroke-linecap="round" opacity="0.9"/>
+        <path d="M7 14 Q22 10 37 14" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-linecap="round"/>
+        <!-- Brillo de vidrio -->
         <ellipse cx="14.5" cy="11.5" rx="6.5" ry="4.2" class="nutrio-avatar-shine-big" />
         <circle cx="16" cy="12.5" r="2.6" class="nutrio-avatar-shine" />
         <ellipse cx="30" cy="32" rx="4.5" ry="2.4" class="nutrio-avatar-shine-low" />
@@ -1677,6 +1692,25 @@ const UI = {
   // leerlo en voz alta con el botón 🔊 sin tener que volver a parsear el HTML.
   _chatTextRefs: {},
 
+  // ---- Menú de 3 puntitos ----
+  toggleMoreMenu() {
+    const dd = document.getElementById('moreMenuDropdown');
+    if (!dd) return;
+    const isOpen = dd.classList.toggle('active');
+    if (isOpen) {
+      // Cerrar al tocar afuera
+      setTimeout(() => {
+        const close = (e) => {
+          if (!document.getElementById('moreMenuWrap').contains(e.target)) {
+            dd.classList.remove('active');
+            document.removeEventListener('pointerdown', close);
+          }
+        };
+        document.addEventListener('pointerdown', close);
+      }, 0);
+    }
+  },
+
   init() {
     // IMPORTANTE: Primero le damos vida a las escuchas de los chips pase lo que pase
     Onboarding.bindAllChips();
@@ -1703,6 +1737,7 @@ const UI = {
     this.renderWeeklyPlan();
     this.renderCart();
     this.renderProfile();
+    if (typeof GymUI !== 'undefined') GymUI.init();
     this.goto('chat');
 
     this._handleDailyEngagement();
@@ -2064,7 +2099,7 @@ const UI = {
     const targetView = document.getElementById(`view-${viewName}`);
     if (targetView) targetView.classList.add('active');
 
-    const viewsOrder = ['chat', 'inicio', 'gym'];
+    const viewsOrder = ['chat', 'inicio', 'semana', 'gym', 'carrito', 'perfil'];
     const idx = viewsOrder.indexOf(viewName);
     const buttons = document.querySelectorAll('.dock-item');
     if (buttons[idx]) buttons[idx].classList.add('active');
@@ -2073,6 +2108,7 @@ const UI = {
     if (inputBar) inputBar.style.display = viewName === 'chat' ? 'block' : 'none';
 
     if (viewName === 'chat') NutrioAvatar.wake();
+    if (viewName === 'gym' && typeof GymUI !== 'undefined') GymUI.init();
   },
 
   // --------------------------------------------------------------------
@@ -2785,81 +2821,6 @@ const UI = {
       clearTimeout(typingTimeoutId);
       this._hideTypingIndicator();
       console.error('NutrIO: error inesperado en sendChat', err);
-    }
-  },
-
-  // Abre el selector de fotos del celular/PC al tocar el clip.
-  pickAttachment() {
-    const fileInput = document.getElementById('chatFileInput');
-    if (fileInput) fileInput.click();
-  },
-
-  // Se dispara cuando el usuario elige una foto (comida, alacena, rutina de
-  // ejercicio, lo que sea). La pinta como mensaje del usuario y la manda a
-  // ChatApp.getBotResponseConFoto (js/nutrioChatAI-fotos.js), que decide
-  // qué tipo de foto es y arma la respuesta. Mismo patrón visual que sendChat.
-  async onAttachmentSelected(inputEl) {
-    const file = inputEl.files && inputEl.files[0];
-    inputEl.value = ''; // permite elegir la misma foto de nuevo más adelante
-    if (!file) return;
-
-    const scroll = document.getElementById('chatScroll');
-    const now = new Date();
-    const previewUrl = URL.createObjectURL(file);
-
-    if (scroll) {
-      scroll.innerHTML += `
-        <div class="msg-row user">
-          <div class="msg-wrap">
-            <div class="msg-bubble user"><img src="${previewUrl}" style="max-width:180px;border-radius:12px;display:block;"></div>
-            <div class="msg-time">${this._formatTime(now)}</div>
-          </div>
-        </div>`;
-      scroll.scrollTop = scroll.scrollHeight;
-    }
-
-    NutrioAvatar.thinking();
-    const typingTimeoutId = setTimeout(() => this._showTypingIndicator(), 150);
-
-    try {
-      const profile = StorageApp.getProfile();
-      const response = await ChatApp.getBotResponseConFoto(file, '', profile);
-      clearTimeout(typingTimeoutId);
-      this._hideTypingIndicator();
-      NutrioAvatar.happy();
-
-      const msgId = 'chatmsg_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
-      const botTime = new Date();
-      this._chatTextRefs[msgId] = response.text;
-
-      if (scroll) {
-        scroll.innerHTML += `
-          <div class="msg-row bot" id="${msgId}">
-            <div class="msg-wrap">
-              <div class="msg-bubble bot" id="${msgId}_bubble"></div>
-              <div class="msg-time">${this._formatTime(botTime)}</div>
-              <div class="chat-feedback" id="${msgId}_feedback" style="opacity:0; transition:opacity .2s ease;">
-                <button type="button" data-role="speak" title="Escuchar" onclick="UI.speakMessage('${msgId}')">🔊</button>
-              </div>
-            </div>
-          </div>`;
-        scroll.scrollTop = scroll.scrollHeight;
-      }
-
-      if (Speech.enabled) Speech.speak(response.text);
-
-      if (scroll) {
-        const bubble = document.getElementById(`${msgId}_bubble`);
-        await this._typeWriterEffect(bubble, response.text, () => {
-          scroll.scrollTop = scroll.scrollHeight;
-        });
-        const feedbackEl = document.getElementById(`${msgId}_feedback`);
-        if (feedbackEl) feedbackEl.style.opacity = '1';
-      }
-    } catch (err) {
-      clearTimeout(typingTimeoutId);
-      this._hideTypingIndicator();
-      console.error('NutrIO: error inesperado en onAttachmentSelected', err);
     }
   },
 
@@ -3712,6 +3673,7 @@ window.ChatApp = {
       this._lastTopic = null;
       const chips = [
         { label: '🇦🇷 Recetas argentinas', msg: 'receta argentina' },
+        { label: '🏋️ Rutina de gym', msg: 'armame una rutina de peso corporal' },
         { label: '🍸 Modo barman', msg: 'modo barman' },
         { label: '🎉 Día libre', msg: 'dia libre' }
       ].map(c =>
@@ -3719,7 +3681,7 @@ window.ChatApp = {
       ).join('');
 
       return this.pickVariant('ayuda', [
-        (h) => `Esto es lo que puedo hacer${h}, además de armarte el día a día: tocá alguno 👇<div class="ingredient-picker-chips">${chips}</div>`
+        (h) => `Esto es lo que puedo hacer${h}, además de armarte el día a día y ser tu entrenador: tocá alguno 👇<div class="ingredient-picker-chips">${chips}</div>`
       ], name);
     }
 

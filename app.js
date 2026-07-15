@@ -2064,7 +2064,7 @@ const UI = {
     const targetView = document.getElementById(`view-${viewName}`);
     if (targetView) targetView.classList.add('active');
 
-    const viewsOrder = ['chat', 'inicio', 'gym'];
+    const viewsOrder = ['chat', 'inicio', 'semana', 'carrito', 'perfil'];
     const idx = viewsOrder.indexOf(viewName);
     const buttons = document.querySelectorAll('.dock-item');
     if (buttons[idx]) buttons[idx].classList.add('active');
@@ -2785,81 +2785,6 @@ const UI = {
       clearTimeout(typingTimeoutId);
       this._hideTypingIndicator();
       console.error('NutrIO: error inesperado en sendChat', err);
-    }
-  },
-
-  // Abre el selector de fotos del celular/PC al tocar el clip.
-  pickAttachment() {
-    const fileInput = document.getElementById('chatFileInput');
-    if (fileInput) fileInput.click();
-  },
-
-  // Se dispara cuando el usuario elige una foto (comida, alacena, rutina de
-  // ejercicio, lo que sea). La pinta como mensaje del usuario y la manda a
-  // ChatApp.getBotResponseConFoto (js/nutrioChatAI-fotos.js), que decide
-  // qué tipo de foto es y arma la respuesta. Mismo patrón visual que sendChat.
-  async onAttachmentSelected(inputEl) {
-    const file = inputEl.files && inputEl.files[0];
-    inputEl.value = ''; // permite elegir la misma foto de nuevo más adelante
-    if (!file) return;
-
-    const scroll = document.getElementById('chatScroll');
-    const now = new Date();
-    const previewUrl = URL.createObjectURL(file);
-
-    if (scroll) {
-      scroll.innerHTML += `
-        <div class="msg-row user">
-          <div class="msg-wrap">
-            <div class="msg-bubble user"><img src="${previewUrl}" style="max-width:180px;border-radius:12px;display:block;"></div>
-            <div class="msg-time">${this._formatTime(now)}</div>
-          </div>
-        </div>`;
-      scroll.scrollTop = scroll.scrollHeight;
-    }
-
-    NutrioAvatar.thinking();
-    const typingTimeoutId = setTimeout(() => this._showTypingIndicator(), 150);
-
-    try {
-      const profile = StorageApp.getProfile();
-      const response = await ChatApp.getBotResponseConFoto(file, '', profile);
-      clearTimeout(typingTimeoutId);
-      this._hideTypingIndicator();
-      NutrioAvatar.happy();
-
-      const msgId = 'chatmsg_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
-      const botTime = new Date();
-      this._chatTextRefs[msgId] = response.text;
-
-      if (scroll) {
-        scroll.innerHTML += `
-          <div class="msg-row bot" id="${msgId}">
-            <div class="msg-wrap">
-              <div class="msg-bubble bot" id="${msgId}_bubble"></div>
-              <div class="msg-time">${this._formatTime(botTime)}</div>
-              <div class="chat-feedback" id="${msgId}_feedback" style="opacity:0; transition:opacity .2s ease;">
-                <button type="button" data-role="speak" title="Escuchar" onclick="UI.speakMessage('${msgId}')">🔊</button>
-              </div>
-            </div>
-          </div>`;
-        scroll.scrollTop = scroll.scrollHeight;
-      }
-
-      if (Speech.enabled) Speech.speak(response.text);
-
-      if (scroll) {
-        const bubble = document.getElementById(`${msgId}_bubble`);
-        await this._typeWriterEffect(bubble, response.text, () => {
-          scroll.scrollTop = scroll.scrollHeight;
-        });
-        const feedbackEl = document.getElementById(`${msgId}_feedback`);
-        if (feedbackEl) feedbackEl.style.opacity = '1';
-      }
-    } catch (err) {
-      clearTimeout(typingTimeoutId);
-      this._hideTypingIndicator();
-      console.error('NutrIO: error inesperado en onAttachmentSelected', err);
     }
   },
 
