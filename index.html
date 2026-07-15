@@ -522,6 +522,39 @@
     display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;
   }
 
+  /* ---- Menú de 3 puntitos ---- */
+  .more-menu-wrap {
+    position: fixed; top: calc(16px + var(--safe-top, 0px)); right: 16px;
+    z-index: 300; display: flex; flex-direction: column; align-items: flex-end;
+  }
+  .more-menu-btn {
+    width: 40px; height: 40px; border-radius: 50%; border: none;
+    background: var(--surface); color: var(--text-muted);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.10), 0 1px 3px rgba(0,0,0,0.06);
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+    transition: background .15s, transform .15s;
+  }
+  .more-menu-btn svg { width: 20px; height: 20px; }
+  .more-menu-btn:active { transform: scale(0.92); }
+  .more-menu-dropdown {
+    display: none; flex-direction: column; gap: 4px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.14);
+    padding: 6px; margin-top: 8px; min-width: 170px;
+    animation: moreMenuIn 0.18s ease;
+  }
+  .more-menu-dropdown.active { display: flex; }
+  @keyframes moreMenuIn { from { opacity:0; transform: translateY(-6px); } to { opacity:1; transform: translateY(0); } }
+  .more-menu-dropdown button {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 14px; border: none; background: none; border-radius: 12px;
+    font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer;
+    transition: background .12s; width: 100%; text-align: left;
+    font-family: var(--font-sans, 'Inter', sans-serif);
+  }
+  .more-menu-dropdown button svg { width: 18px; height: 18px; color: var(--text-muted); flex-shrink:0; }
+  .more-menu-dropdown button:active { background: var(--bg); }
+
   .gym-instructions-toggle {
     background: var(--primary-dim); border: 1px solid var(--border); border-radius: 10px;
     padding: 6px 12px; font-size: 12px; font-weight: 600; color: var(--primary-ink);
@@ -876,10 +909,6 @@
       <svg viewBox="0 0 24 24"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
       <span>Inicio</span>
     </button>
-    <button class="dock-item" onclick="UI.goto('semana')">
-      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-      <span>Semana</span>
-    </button>
     <button class="dock-item" onclick="UI.goto('gym')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="1" y="6" width="4" height="12" rx="1.5" transform="rotate(-10 3 12)"/>
@@ -893,11 +922,24 @@
       <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       <span>Carrito</span>
     </button>
-    <button class="dock-item" onclick="UI.goto('perfil')">
-      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  </nav>
+</div>
+
+<!-- Menú de 3 puntitos (arriba a la derecha) -->
+<div class="more-menu-wrap" id="moreMenuWrap">
+  <button class="more-menu-btn" onclick="UI.toggleMoreMenu()">
+    <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+  </button>
+  <div class="more-menu-dropdown" id="moreMenuDropdown">
+    <button onclick="UI.goto('semana'); UI.toggleMoreMenu();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Semana</span>
+    </button>
+    <button onclick="UI.goto('perfil'); UI.toggleMoreMenu();">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span>Perfil</span>
     </button>
-  </nav>
+  </div>
 </div>
 
 <div class="modal-overlay" id="recipeModal" onclick="UI.closeRecipeModalOnOverlay(event)">
