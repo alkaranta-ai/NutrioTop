@@ -3,9 +3,11 @@
   const MIME_PERMITIDOS = ['image/jpeg', 'image/png', 'image/webp'];
 
   const INSTRUCCIONES_FOTO = `
-El usuario te mandó una FOTO de alimentos o ingredientes que tiene a mano
-(heladera, alacena, mesada, o un plato ya armado). Tu tarea:
+El usuario te mandó una FOTO. Puede ser de dos tipos bien distintos —
+primero fijate cuál es, y respondé según corresponda:
 
+TIPO 1 — Alimentos/ingredientes (heladera, alacena, mesada, o un plato ya
+armado):
 - Identificá los alimentos/ingredientes que reconocés en la imagen. Si algo
   no se distingue con claridad, decilo con onda en vez de inventarlo
   ("no se ve bien qué es esto de acá, ¿me decís?").
@@ -19,10 +21,25 @@ El usuario te mandó una FOTO de alimentos o ingredientes que tiene a mano
 - Respetá SIEMPRE alergias, restricciones y condiciones de salud del
   [DATOS ACTUALES] del usuario: si algo de la foto no lo puede comer,
   avisale y no lo incluyas en ninguna sugerencia.
-- Si la foto no tiene nada que ver con comida (o no se ve nada útil),
-  decilo con humor liviano y pedile que mande otra o cuente qué tiene.
-- Mismo estilo que siempre: español rioplatense, 2-4 oraciones salvo que
-  haga falta más para las 2-3 ideas, sin sonar receta de manual.
+
+TIPO 2 — Rutina de ejercicio / plan de entrenamiento (una captura o foto de
+una lista de ejercicios, series, repeticiones, o una tabla de gimnasio):
+- Leé los ejercicios, series y repeticiones que reconozcas en la imagen. Si
+  algo no se lee bien, decilo con onda en vez de inventarlo.
+- Comentá la rutina como entrenador: qué grupos musculares trabaja, si está
+  balanceada, y si falta calentamiento o algún grupo muscular.
+- Si tiene sentido, sugerí 1-2 ajustes concretos (series/reps, progresión,
+  o un ejercicio de peso corporal para completarla), usando lo que sabés de
+  la sección Gym de la app.
+- Si el usuario tiene alguna condición de salud o lesión en el
+  [DATOS ACTUALES], tenela en cuenta antes de sugerir cambios.
+
+SI NINGUNO DE LOS DOS: si la foto no tiene nada que ver con comida ni con
+entrenamiento (o no se ve nada útil), decilo con humor liviano y pedile que
+mande otra o cuente qué tiene.
+
+Mismo estilo que siempre: español rioplatense, 2-4 oraciones salvo que haga
+falta más para detallar la receta o la rutina, sin sonar de manual.
 `.trim();
 
   function archivoValido(file) {
@@ -85,7 +102,7 @@ El usuario te mandó una FOTO de alimentos o ingredientes que tiene a mano
     if (!data.text) throw new Error('sin_texto');
 
     if (window.ChatApp._historialIA) {
-      window.ChatApp._historialIA.push({ role: 'user', parts: [{ text: '[Usuario mandó una foto de alimentos]' }] });
+      window.ChatApp._historialIA.push({ role: 'user', parts: [{ text: '[Usuario mandó una foto]' }] });
       window.ChatApp._historialIA.push({ role: 'model', parts: [{ text: data.text }] });
     }
 
