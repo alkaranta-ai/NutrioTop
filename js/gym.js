@@ -555,20 +555,18 @@ window.GymUI = {
     const anim = EXERCISE_ANIM[exId] || 'hold';
     return `
       <div class="gym-stickman-wrap">
-        <svg class="stickman-svg anim-${anim}" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <g class="stick-outer">
-            <g class="stick-upper">
-              <circle class="stick-head" cx="50" cy="20" r="8"/>
-              <line class="stick-torso" x1="50" y1="28" x2="50" y2="58"/>
-              <line class="stick-arm-l" x1="50" y1="34" x2="32" y2="50"/>
-              <line class="stick-arm-r" x1="50" y1="34" x2="68" y2="50"/>
-            </g>
-            <g class="stick-lower">
-              <line class="stick-leg-l" x1="50" y1="58" x2="38" y2="85"/>
-              <line class="stick-leg-r" x1="50" y1="58" x2="62" y2="85"/>
-            </g>
-          </g>
-        </svg>
+        <div class="stickman anim-${anim}">
+          <div class="stick-upper">
+            <div class="stick-head"></div>
+            <div class="stick-torso"></div>
+            <div class="stick-arm-l"></div>
+            <div class="stick-arm-r"></div>
+          </div>
+          <div class="stick-lower">
+            <div class="stick-leg-l"></div>
+            <div class="stick-leg-r"></div>
+          </div>
+        </div>
       </div>
     `;
   },
