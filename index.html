@@ -569,19 +569,39 @@
   .gym-exercise-item { cursor: default; }
   .gym-exercise-actions { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
 
-  /* ---- Muñequito animado (avatar "cómo hacerlo") ---- */
+  /* ---- Muñequito animado (avatar "cómo hacerlo") ----
+     Hecho con divs comunes (no SVG): las animaciones CSS sobre <g>/<line>
+     de SVG no se renderizan de forma confiable en todos los navegadores
+     móviles (sobre todo Safari/iOS). Con divs + transform funciona igual
+     en todos lados. */
   .gym-stickman-wrap {
     display: flex; justify-content: center; align-items: center;
     background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-    padding: 10px 0; margin-top: 8px;
+    padding: 16px 0; margin-top: 8px;
   }
-  .stickman-svg { width: 74px; height: 74px; overflow: visible; }
-  .stick-head { fill: var(--primary); stroke: var(--primary); }
-  .stick-torso, .stick-arm-l, .stick-arm-r, .stick-leg-l, .stick-leg-r {
-    stroke: var(--text); stroke-width: 4; stroke-linecap: round; fill: none;
+  .stickman { position: relative; width: 70px; height: 90px; }
+  .stick-upper { position: absolute; top: 0; left: 0; width: 70px; height: 46px; transform-origin: 35px 46px; }
+  .stick-lower { position: absolute; top: 44px; left: 0; width: 70px; height: 46px; }
+  .stick-head {
+    position: absolute; top: 0; left: 27px; width: 16px; height: 16px;
+    border-radius: 50%; background: var(--primary);
   }
-  .stick-outer, .stick-upper, .stick-lower { transform-origin: 50px 58px; }
-  .stick-arm-l, .stick-arm-r { transform-origin: 50px 34px; }
+  .stick-torso {
+    position: absolute; top: 16px; left: 33px; width: 4px; height: 30px;
+    background: var(--text); border-radius: 2px;
+  }
+  .stick-arm-l, .stick-arm-r {
+    position: absolute; top: 20px; left: 35px; width: 4px; height: 22px;
+    background: var(--text); border-radius: 2px; transform-origin: top center;
+  }
+  .stick-arm-l { transform: rotate(-25deg); }
+  .stick-arm-r { transform: rotate(25deg); }
+  .stick-leg-l, .stick-leg-r {
+    position: absolute; top: 0; left: 35px; width: 4px; height: 30px;
+    background: var(--text); border-radius: 2px; transform-origin: top center;
+  }
+  .stick-leg-l { transform: rotate(-12deg); }
+  .stick-leg-r { transform: rotate(12deg); }
 
   @keyframes stickBob     { 0%,100% { transform: translateY(0);   } 50% { transform: translateY(6px);   } }
   @keyframes stickBobBig  { 0%,100% { transform: translateY(0);   } 50% { transform: translateY(10px);  } }
@@ -591,26 +611,29 @@
   @keyframes stickBridge  { 0%,100% { transform: translateY(0);   } 50% { transform: translateY(-6px);  } }
   @keyframes stickBreathe { 0%,100% { transform: scale(1);        } 50% { transform: scale(1.03);       } }
   @keyframes stickCrunchMv{ 0%,100% { transform: rotate(0deg);    } 50% { transform: rotate(18deg);     } }
-  @keyframes stickArmUpL  { 0%,100% { transform: rotate(0deg);    } 50% { transform: rotate(-55deg);    } }
-  @keyframes stickArmUpR  { 0%,100% { transform: rotate(0deg);    } 50% { transform: rotate(55deg);     } }
-  @keyframes stickArmCurlL{ 0%,100% { transform: rotate(0deg);    } 50% { transform: rotate(-35deg);    } }
-  @keyframes stickArmCurlR{ 0%,100% { transform: rotate(0deg);    } 50% { transform: rotate(35deg);     } }
-  @keyframes stickLungeL  { 0%,100% { transform: rotate(0deg);    } 50% { transform: rotate(22deg);     } }
-  @keyframes stickLungeR  { 0%,100% { transform: rotate(0deg);    } 50% { transform: rotate(-22deg);    } }
+  @keyframes armRaiseL    { 0%,100% { transform: rotate(-25deg);  } 50% { transform: rotate(-95deg);    } }
+  @keyframes armRaiseR    { 0%,100% { transform: rotate(25deg);   } 50% { transform: rotate(95deg);     } }
+  @keyframes armCurlL     { 0%,100% { transform: rotate(-25deg);  } 50% { transform: rotate(-75deg);    } }
+  @keyframes armCurlR     { 0%,100% { transform: rotate(25deg);   } 50% { transform: rotate(75deg);     } }
+  @keyframes legLungeL    { 0%,100% { transform: rotate(-12deg);  } 50% { transform: rotate(-42deg);    } }
+  @keyframes legLungeR    { 0%,100% { transform: rotate(12deg);   } 50% { transform: rotate(-18deg);    } }
 
-  .anim-push   .stick-outer { animation: stickBob 1.4s ease-in-out infinite; }
-  .anim-pull   .stick-outer { animation: stickPull 1.4s ease-in-out infinite; }
-  .anim-hold   .stick-outer { animation: stickBreathe 2.4s ease-in-out infinite; }
-  .anim-squat  .stick-outer { animation: stickBobBig 1.6s ease-in-out infinite; }
-  .anim-jump   .stick-outer { animation: stickJump 0.7s ease-in-out infinite; }
-  .anim-calf   .stick-outer { animation: stickCalfMv 1s ease-in-out infinite; }
-  .anim-bridge .stick-outer { animation: stickBridge 1.8s ease-in-out infinite; }
-  .anim-raise  .stick-arm-l { animation: stickArmUpL 1.4s ease-in-out infinite; }
-  .anim-raise  .stick-arm-r { animation: stickArmUpR 1.4s ease-in-out infinite; }
-  .anim-curl   .stick-arm-l { animation: stickArmCurlL 1s ease-in-out infinite; }
-  .anim-curl   .stick-arm-r { animation: stickArmCurlR 1s ease-in-out infinite; }
-  .anim-lunge  .stick-leg-l { animation: stickLungeL 1.4s ease-in-out infinite; }
-  .anim-lunge  .stick-leg-r { animation: stickLungeR 1.4s ease-in-out infinite; }
+  /* Movimientos de cuerpo entero: se animan sobre el contenedor .stickman */
+  .anim-push   .stickman { animation: stickBob 1.4s ease-in-out infinite; }
+  .anim-pull   .stickman { animation: stickPull 1.4s ease-in-out infinite; }
+  .anim-hold   .stickman { animation: stickBreathe 2.4s ease-in-out infinite; }
+  .anim-squat  .stickman { animation: stickBobBig 1.6s ease-in-out infinite; }
+  .anim-jump   .stickman { animation: stickJump 0.7s ease-in-out infinite; }
+  .anim-calf   .stickman { animation: stickCalfMv 1s ease-in-out infinite; }
+  .anim-bridge .stickman { animation: stickBridge 1.8s ease-in-out infinite; }
+
+  /* Movimientos puntuales: brazos, piernas o torso */
+  .anim-raise  .stick-arm-l { animation: armRaiseL 1.4s ease-in-out infinite; }
+  .anim-raise  .stick-arm-r { animation: armRaiseR 1.4s ease-in-out infinite; }
+  .anim-curl   .stick-arm-l { animation: armCurlL 1s ease-in-out infinite; }
+  .anim-curl   .stick-arm-r { animation: armCurlR 1s ease-in-out infinite; }
+  .anim-lunge  .stick-leg-l { animation: legLungeL 1.4s ease-in-out infinite; }
+  .anim-lunge  .stick-leg-r { animation: legLungeR 1.4s ease-in-out infinite; }
   .anim-crunch .stick-upper { animation: stickCrunchMv 1.2s ease-in-out infinite; }
 </style>
 </head>
