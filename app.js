@@ -2064,7 +2064,7 @@ const UI = {
     const targetView = document.getElementById(`view-${viewName}`);
     if (targetView) targetView.classList.add('active');
 
-    const viewsOrder = ['chat', 'inicio', 'semana', 'carrito', 'perfil'];
+    const viewsOrder = ['chat', 'inicio', 'gym'];
     const idx = viewsOrder.indexOf(viewName);
     const buttons = document.querySelectorAll('.dock-item');
     if (buttons[idx]) buttons[idx].classList.add('active');
