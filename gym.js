@@ -382,29 +382,65 @@ const GYM_EXERCISES = {
   ]
 };
 
-// ---- Fotos reales para el "cómo hacerlo" (reemplaza al muñequito) ----
-// Cada ejercicio puede tener 2 fotos (posición inicial / posición final)
-// que se muestran en loop (ver _photoLoopHTML). Las fotos vienen de
-// free-exercise-db (github.com/yuhonas/free-exercise-db), una base de
-// datos de dominio público (Unlicense), alojada gratis en GitHub:
-//   https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/<ID>/0.jpg
-//
-// Ya cargué las que pude confirmar 1 a 1 contra esa base. Para el resto,
-// dejé el ícono grande como respaldo (no inventé links para no arriesgar
-// fotos rotas o que no correspondan al ejercicio).
-//
-// Para agregar más: buscá el ejercicio en https://yuhonas.github.io/free-exercise-db/,
-// copiá las URLs de sus 2 fotos y agregá una línea acá, ej:
-//   pushup: [FED_BASE + 'Pushups/0.jpg', FED_BASE + 'Pushups/1.jpg'],
-// Si una URL no carga, el <img> se oculta solo y queda el ícono de fondo.
+// ---- Fotos reales para el "cómo hacerlo" ----
+// IDs verificados contra dist/exercises.json de yuhonas/free-exercise-db (Unlicense)
+// Para ejercicios sin foto exacta en la DB se usa el movimiento más cercano disponible.
 const FED_BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
 const EXERCISE_PHOTOS = {
-  squat:          [FED_BASE + 'Bodyweight_Squat/0.jpg', FED_BASE + 'Bodyweight_Squat/1.jpg'],
-  lunges:         [FED_BASE + 'Bodyweight_Walking_Lunge/0.jpg', FED_BASE + 'Bodyweight_Walking_Lunge/1.jpg'],
-  reverse_lunges: [FED_BASE + 'Bodyweight_Walking_Lunge/0.jpg', FED_BASE + 'Bodyweight_Walking_Lunge/1.jpg'],
-  tricep_dip:     [FED_BASE + 'Bench_Dips/0.jpg', FED_BASE + 'Bench_Dips/1.jpg'],
-  bicycle_crunch: [FED_BASE + 'Air_Bike/0.jpg', FED_BASE + 'Air_Bike/1.jpg'],
-  leg_raise:      [FED_BASE + 'Bent-Knee_Hip_Raise/0.jpg', FED_BASE + 'Bent-Knee_Hip_Raise/1.jpg']
+
+  // ── PECHO ──────────────────────────────────────────────────────────
+  pushup:         [FED_BASE + 'Pushups/0.jpg',                               FED_BASE + 'Pushups/1.jpg'],
+  pushup_wide:    [FED_BASE + 'Push-Up_Wide/0.jpg',                          FED_BASE + 'Push-Up_Wide/1.jpg'],
+  diamond_pushup: [FED_BASE + 'Push-Ups_-_Close_Triceps_Position/0.jpg',     FED_BASE + 'Push-Ups_-_Close_Triceps_Position/1.jpg'],
+  decline_pushup: [FED_BASE + 'Push-Ups_With_Feet_Elevated/0.jpg',           FED_BASE + 'Push-Ups_With_Feet_Elevated/1.jpg'],
+  pike_pushup:    [FED_BASE + 'Decline_Push-Up/0.jpg',                       FED_BASE + 'Decline_Push-Up/1.jpg'],
+
+  // ── ESPALDA ────────────────────────────────────────────────────────
+  pullup:             [FED_BASE + 'Pullups/0.jpg',                           FED_BASE + 'Pullups/1.jpg'],
+  chinup:             [FED_BASE + 'Chin-Up/0.jpg',                           FED_BASE + 'Chin-Up/1.jpg'],
+  australian_pullup:  [FED_BASE + 'Inverted_Row/0.jpg',                      FED_BASE + 'Inverted_Row/1.jpg'],
+  inverted_row_high:  [FED_BASE + 'Bodyweight_Mid_Row/0.jpg',                FED_BASE + 'Bodyweight_Mid_Row/1.jpg'],
+  superman_hold:      [FED_BASE + 'Superman/0.jpg',                          FED_BASE + 'Superman/1.jpg'],
+
+  // ── HOMBROS ────────────────────────────────────────────────────────
+  pike_pushup_sh:     [FED_BASE + 'Decline_Push-Up/0.jpg',                   FED_BASE + 'Decline_Push-Up/1.jpg'],
+  handstand_hold:     [FED_BASE + 'Handstand_Push-Ups/0.jpg',                FED_BASE + 'Handstand_Push-Ups/1.jpg'],
+  lateral_raise_body: [FED_BASE + 'Lateral_Raise_-_With_Bands/0.jpg',        FED_BASE + 'Lateral_Raise_-_With_Bands/1.jpg'],
+  front_raise_body:   [FED_BASE + 'Side_Laterals_to_Front_Raise/0.jpg',      FED_BASE + 'Side_Laterals_to_Front_Raise/1.jpg'],
+  shrug_body:         [FED_BASE + 'Dumbbell_Shrug/0.jpg',                    FED_BASE + 'Dumbbell_Shrug/1.jpg'],
+
+  // ── BRAZOS ─────────────────────────────────────────────────────────
+  tricep_dip:         [FED_BASE + 'Bench_Dips/0.jpg',                        FED_BASE + 'Bench_Dips/1.jpg'],
+  tricep_pushup:      [FED_BASE + 'Push-Ups_-_Close_Triceps_Position/0.jpg', FED_BASE + 'Push-Ups_-_Close_Triceps_Position/1.jpg'],
+  bicep_curl_body:    [FED_BASE + 'Dumbbell_Bicep_Curl/0.jpg',               FED_BASE + 'Dumbbell_Bicep_Curl/1.jpg'],
+  hammer_curl_body:   [FED_BASE + 'Alternate_Hammer_Curl/0.jpg',             FED_BASE + 'Alternate_Hammer_Curl/1.jpg'],
+  diamond_pushup_bi:  [FED_BASE + 'Push-Ups_-_Close_Triceps_Position/0.jpg', FED_BASE + 'Push-Ups_-_Close_Triceps_Position/1.jpg'],
+
+  // ── PIERNAS ────────────────────────────────────────────────────────
+  squat:          [FED_BASE + 'Bodyweight_Squat/0.jpg',                      FED_BASE + 'Bodyweight_Squat/1.jpg'],
+  jump_squat:     [FED_BASE + 'Freehand_Jump_Squat/0.jpg',                   FED_BASE + 'Freehand_Jump_Squat/1.jpg'],
+  lunges:         [FED_BASE + 'Bodyweight_Walking_Lunge/0.jpg',              FED_BASE + 'Bodyweight_Walking_Lunge/1.jpg'],
+  reverse_lunges: [FED_BASE + 'Crossover_Reverse_Lunge/0.jpg',               FED_BASE + 'Crossover_Reverse_Lunge/1.jpg'],
+  calf_raise:     [FED_BASE + 'Standing_Calf_Raises/0.jpg',                  FED_BASE + 'Standing_Calf_Raises/1.jpg'],
+  glute_bridge:   [FED_BASE + 'Butt_Lift_Bridge/0.jpg',                      FED_BASE + 'Butt_Lift_Bridge/1.jpg'],
+  wall_sit:       [FED_BASE + 'Split_Squats/0.jpg',                          FED_BASE + 'Split_Squats/1.jpg'],
+
+  // ── CORE ───────────────────────────────────────────────────────────
+  plank:          [FED_BASE + 'Plank/0.jpg',                                 FED_BASE + 'Plank/1.jpg'],
+  crunch:         [FED_BASE + 'Crunches/0.jpg',                              FED_BASE + 'Crunches/1.jpg'],
+  leg_raise:      [FED_BASE + 'Bent-Knee_Hip_Raise/0.jpg',                   FED_BASE + 'Bent-Knee_Hip_Raise/1.jpg'],
+  russian_twist:  [FED_BASE + 'Russian_Twist/0.jpg',                         FED_BASE + 'Russian_Twist/1.jpg'],
+  mountain_climb: [FED_BASE + 'Mountain_Climbers/0.jpg',                     FED_BASE + 'Mountain_Climbers/1.jpg'],
+  dead_bug:       [FED_BASE + 'Dead_Bug/0.jpg',                              FED_BASE + 'Dead_Bug/1.jpg'],
+  bicycle_crunch: [FED_BASE + 'Air_Bike/0.jpg',                              FED_BASE + 'Air_Bike/1.jpg'],
+
+  // ── CARDIO ─────────────────────────────────────────────────────────
+  burpees:        [FED_BASE + 'Inchworm/0.jpg',                              FED_BASE + 'Inchworm/1.jpg'],
+  jumping_jack:   [FED_BASE + 'Star_Jump/0.jpg',                             FED_BASE + 'Star_Jump/1.jpg'],
+  high_knees:     [FED_BASE + 'Flutter_Kicks/0.jpg',                         FED_BASE + 'Flutter_Kicks/1.jpg'],
+  jump_rope:      [FED_BASE + 'Rope_Jumping/0.jpg',                          FED_BASE + 'Rope_Jumping/1.jpg'],
+  squat_jack:     [FED_BASE + 'Scissors_Jump/0.jpg',                         FED_BASE + 'Scissors_Jump/1.jpg'],
+  plank_jack:     [FED_BASE + 'Side_Bridge/0.jpg',                           FED_BASE + 'Side_Bridge/1.jpg'],
 };
 
 // ---- Etiquetas amigables para cada grupo ----
