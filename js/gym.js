@@ -1064,10 +1064,4 @@ window.GymUI = {
     workouts = workouts.filter(w => w.id !== id);
     GymStorage.saveWorkouts(workouts);
     document.getElementById('gymFinishModal').classList.remove('active');
-    this._render();
-  },
-
-  _closeDetail() {
-    document.getElementById('gymFinishModal').classList.remove('active');
-  }
-};
+    this._render(
