@@ -1,4 +1,4 @@
-// ==========================================================================
+/ ==========================================================================
 // NUTRIO - MÓDULO DE GIMNASIO — SOLO PESO CORPORAL (js/gym.js)
 // ==========================================================================
 
@@ -1064,4 +1064,4 @@ window.GymUI = {
     workouts = workouts.filter(w => w.id !== id);
     GymStorage.saveWorkouts(workouts);
     document.getElementById('gymFinishModal').classList.remove('active');
-    this._render(
+    this._render
