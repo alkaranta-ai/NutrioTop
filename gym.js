@@ -382,65 +382,39 @@ const GYM_EXERCISES = {
   ]
 };
 
-// ---- Fotos reales para el "cómo hacerlo" ----
-// IDs verificados contra dist/exercises.json de yuhonas/free-exercise-db (Unlicense)
-// Para ejercicios sin foto exacta en la DB se usa el movimiento más cercano disponible.
-const FED_BASE = 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/';
-const EXERCISE_PHOTOS = {
+// ==========================================================================
+// Pictogramas animados de "cómo se hace" (reemplazan a las fotos)
+// ==========================================================================
+// En vez de fotos de stock (que quedaban desprolijas / podían romperse),
+// cada ejercicio se agrupa en un PATRÓN DE MOVIMIENTO. El ícono del
+// ejercicio se anima en loop según ese patrón (sentadilla = baja y sube,
+// tracción = sube y baja, isométrico = pulso sostenido, etc.), y un
+// puntito recorre una guía que marca el rango de movimiento. Todo es
+// CSS puro: cero imágenes externas, cero riesgo de link roto, y consistente
+// con la identidad visual de la app (usa var(--primary)).
+//
+// Patrones disponibles: squat · jump · pull · raise · hold · push · twist · curl
+const EXERCISE_ANIM = {
+  // pecho — empuje
+  pushup: 'push', pushup_wide: 'push', diamond_pushup: 'push', decline_pushup: 'push', pike_pushup: 'push',
+  // espalda — tracción / isométrico
+  pullup: 'pull', chinup: 'pull', australian_pullup: 'pull', inverted_row_high: 'pull', superman_hold: 'hold',
+  // hombros
+  pike_pushup_sh: 'push', handstand_hold: 'hold', lateral_raise_body: 'raise', front_raise_body: 'raise', shrug_body: 'raise',
+  // brazos
+  tricep_dip: 'push', tricep_pushup: 'push', bicep_curl_body: 'hold', hammer_curl_body: 'curl', diamond_pushup_bi: 'push',
+  // piernas
+  squat: 'squat', jump_squat: 'jump', lunges: 'squat', reverse_lunges: 'squat', calf_raise: 'raise', glute_bridge: 'raise', wall_sit: 'hold',
+  // core
+  plank: 'hold', crunch: 'curl', leg_raise: 'raise', russian_twist: 'twist', mountain_climb: 'jump', dead_bug: 'raise', bicycle_crunch: 'twist',
+  // cardio
+  burpees: 'jump', jumping_jack: 'jump', high_knees: 'jump', jump_rope: 'jump', squat_jack: 'jump', plank_jack: 'jump'
+};
 
-  // ── PECHO ──────────────────────────────────────────────────────────
-  pushup:         [FED_BASE + 'Pushups/0.jpg',                               FED_BASE + 'Pushups/1.jpg'],
-  pushup_wide:    [FED_BASE + 'Push-Up_Wide/0.jpg',                          FED_BASE + 'Push-Up_Wide/1.jpg'],
-  diamond_pushup: [FED_BASE + 'Push-Ups_-_Close_Triceps_Position/0.jpg',     FED_BASE + 'Push-Ups_-_Close_Triceps_Position/1.jpg'],
-  decline_pushup: [FED_BASE + 'Push-Ups_With_Feet_Elevated/0.jpg',           FED_BASE + 'Push-Ups_With_Feet_Elevated/1.jpg'],
-  pike_pushup:    [FED_BASE + 'Decline_Push-Up/0.jpg',                       FED_BASE + 'Decline_Push-Up/1.jpg'],
-
-  // ── ESPALDA ────────────────────────────────────────────────────────
-  pullup:             [FED_BASE + 'Pullups/0.jpg',                           FED_BASE + 'Pullups/1.jpg'],
-  chinup:             [FED_BASE + 'Chin-Up/0.jpg',                           FED_BASE + 'Chin-Up/1.jpg'],
-  australian_pullup:  [FED_BASE + 'Inverted_Row/0.jpg',                      FED_BASE + 'Inverted_Row/1.jpg'],
-  inverted_row_high:  [FED_BASE + 'Bodyweight_Mid_Row/0.jpg',                FED_BASE + 'Bodyweight_Mid_Row/1.jpg'],
-  superman_hold:      [FED_BASE + 'Superman/0.jpg',                          FED_BASE + 'Superman/1.jpg'],
-
-  // ── HOMBROS ────────────────────────────────────────────────────────
-  pike_pushup_sh:     [FED_BASE + 'Decline_Push-Up/0.jpg',                   FED_BASE + 'Decline_Push-Up/1.jpg'],
-  handstand_hold:     [FED_BASE + 'Handstand_Push-Ups/0.jpg',                FED_BASE + 'Handstand_Push-Ups/1.jpg'],
-  lateral_raise_body: [FED_BASE + 'Lateral_Raise_-_With_Bands/0.jpg',        FED_BASE + 'Lateral_Raise_-_With_Bands/1.jpg'],
-  front_raise_body:   [FED_BASE + 'Side_Laterals_to_Front_Raise/0.jpg',      FED_BASE + 'Side_Laterals_to_Front_Raise/1.jpg'],
-  shrug_body:         [FED_BASE + 'Dumbbell_Shrug/0.jpg',                    FED_BASE + 'Dumbbell_Shrug/1.jpg'],
-
-  // ── BRAZOS ─────────────────────────────────────────────────────────
-  tricep_dip:         [FED_BASE + 'Bench_Dips/0.jpg',                        FED_BASE + 'Bench_Dips/1.jpg'],
-  tricep_pushup:      [FED_BASE + 'Push-Ups_-_Close_Triceps_Position/0.jpg', FED_BASE + 'Push-Ups_-_Close_Triceps_Position/1.jpg'],
-  bicep_curl_body:    [FED_BASE + 'Dumbbell_Bicep_Curl/0.jpg',               FED_BASE + 'Dumbbell_Bicep_Curl/1.jpg'],
-  hammer_curl_body:   [FED_BASE + 'Alternate_Hammer_Curl/0.jpg',             FED_BASE + 'Alternate_Hammer_Curl/1.jpg'],
-  diamond_pushup_bi:  [FED_BASE + 'Push-Ups_-_Close_Triceps_Position/0.jpg', FED_BASE + 'Push-Ups_-_Close_Triceps_Position/1.jpg'],
-
-  // ── PIERNAS ────────────────────────────────────────────────────────
-  squat:          [FED_BASE + 'Bodyweight_Squat/0.jpg',                      FED_BASE + 'Bodyweight_Squat/1.jpg'],
-  jump_squat:     [FED_BASE + 'Freehand_Jump_Squat/0.jpg',                   FED_BASE + 'Freehand_Jump_Squat/1.jpg'],
-  lunges:         [FED_BASE + 'Bodyweight_Walking_Lunge/0.jpg',              FED_BASE + 'Bodyweight_Walking_Lunge/1.jpg'],
-  reverse_lunges: [FED_BASE + 'Crossover_Reverse_Lunge/0.jpg',               FED_BASE + 'Crossover_Reverse_Lunge/1.jpg'],
-  calf_raise:     [FED_BASE + 'Standing_Calf_Raises/0.jpg',                  FED_BASE + 'Standing_Calf_Raises/1.jpg'],
-  glute_bridge:   [FED_BASE + 'Butt_Lift_Bridge/0.jpg',                      FED_BASE + 'Butt_Lift_Bridge/1.jpg'],
-  wall_sit:       [FED_BASE + 'Split_Squats/0.jpg',                          FED_BASE + 'Split_Squats/1.jpg'],
-
-  // ── CORE ───────────────────────────────────────────────────────────
-  plank:          [FED_BASE + 'Plank/0.jpg',                                 FED_BASE + 'Plank/1.jpg'],
-  crunch:         [FED_BASE + 'Crunches/0.jpg',                              FED_BASE + 'Crunches/1.jpg'],
-  leg_raise:      [FED_BASE + 'Bent-Knee_Hip_Raise/0.jpg',                   FED_BASE + 'Bent-Knee_Hip_Raise/1.jpg'],
-  russian_twist:  [FED_BASE + 'Russian_Twist/0.jpg',                         FED_BASE + 'Russian_Twist/1.jpg'],
-  mountain_climb: [FED_BASE + 'Mountain_Climbers/0.jpg',                     FED_BASE + 'Mountain_Climbers/1.jpg'],
-  dead_bug:       [FED_BASE + 'Dead_Bug/0.jpg',                              FED_BASE + 'Dead_Bug/1.jpg'],
-  bicycle_crunch: [FED_BASE + 'Air_Bike/0.jpg',                              FED_BASE + 'Air_Bike/1.jpg'],
-
-  // ── CARDIO ─────────────────────────────────────────────────────────
-  burpees:        [FED_BASE + 'Inchworm/0.jpg',                              FED_BASE + 'Inchworm/1.jpg'],
-  jumping_jack:   [FED_BASE + 'Star_Jump/0.jpg',                             FED_BASE + 'Star_Jump/1.jpg'],
-  high_knees:     [FED_BASE + 'Flutter_Kicks/0.jpg',                         FED_BASE + 'Flutter_Kicks/1.jpg'],
-  jump_rope:      [FED_BASE + 'Rope_Jumping/0.jpg',                          FED_BASE + 'Rope_Jumping/1.jpg'],
-  squat_jack:     [FED_BASE + 'Scissors_Jump/0.jpg',                         FED_BASE + 'Scissors_Jump/1.jpg'],
-  plank_jack:     [FED_BASE + 'Side_Bridge/0.jpg',                           FED_BASE + 'Side_Bridge/1.jpg'],
+// Orientación de la guía de recorrido para cada patrón (vertical u horizontal)
+const ANIM_ORIENTATION = {
+  squat: 'v', jump: 'v', pull: 'v', raise: 'v', hold: 'v',
+  push: 'h', twist: 'h', curl: 'h'
 };
 
 // ---- Etiquetas amigables para cada grupo ----
@@ -596,19 +570,17 @@ window.GymUI = {
   _sessionExercises: [],
   _expandedInstructions: {}, // Track which exercise instructions are shown
 
-  // Arma el loop de fotos del ejercicio (ver EXERCISE_PHOTOS). Si no hay
-  // fotos cargadas para este ejercicio, muestra el ícono grande como
-  // respaldo en vez de una foto rota.
-  _photoLoopHTML(ex) {
-    const photos = EXERCISE_PHOTOS[ex.id];
-    if (!photos) {
-      return `<div class="gym-photo-loop gym-photo-fallback"><span class="gym-photo-fallback-icon" style="position:static; font-size:44px;">${ex.icon}</span></div>`;
-    }
+  // Arma el pictograma animado del ejercicio (ver EXERCISE_ANIM / ANIM_ORIENTATION).
+  // Reemplaza al viejo loop de fotos: es 100% CSS, no depende de imágenes
+  // externas y sigue la identidad visual de la app.
+  _pictogramHTML(ex) {
+    const pattern = EXERCISE_ANIM[ex.id] || 'hold';
+    const orientation = ANIM_ORIENTATION[pattern] || 'v';
     return `
-      <div class="gym-photo-loop">
-        <span class="gym-photo-fallback-icon">${ex.icon}</span>
-        <img src="${photos[0]}" alt="${ex.name} - paso 1" loading="lazy" onerror="this.style.display='none'">
-        <img src="${photos[1]}" alt="${ex.name} - paso 2" loading="lazy" onerror="this.style.display='none'">
+      <div class="gym-pictogram gp-${pattern}">
+        <div class="gym-pictogram-track ${orientation}"></div>
+        <div class="gym-pictogram-dot"></div>
+        <div class="gym-pictogram-icon">${ex.icon}</div>
       </div>
     `;
   },
@@ -836,7 +808,7 @@ window.GymUI = {
             </div>
 
             ${isExpanded ? `
-              ${this._photoLoopHTML(ex)}
+              ${this._pictogramHTML(ex)}
               <div class="gym-instructions-box">
                 ${ex.instructions.map((step, i) => `<div style="margin-bottom: ${i < ex.instructions.length - 1 ? '8px' : '0'}">${step}</div>`).join('')}
               </div>
